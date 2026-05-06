@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SahiPrice</title>
+
+<style>
+body{
+  margin:0;
+  font-family:system-ui;
+  background:#0b1220;
+  color:#fff;
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:20px;
+}
+
+h1{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.card{
+  background:#111a2f;
+  padding:20px;
+  border-radius:12px;
+  margin-bottom:15px;
+  box-shadow:0 5px 20px rgba(0,0,0,0.4);
+}
+
+label{
+  display:block;
+  margin-top:10px;
+  font-size:14px;
+  color:#aaa;
+}
+
+select,input{
+  width:100%;
+  padding:12px;
+  margin-top:5px;
+  border-radius:8px;
+  border:none;
+  background:#0f172a;
+  color:#fff;
+}
+
+button{
+  width:100%;
+  margin-top:15px;
+  padding:14px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(135deg,#6ee7ff,#7c9cff);
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.result{
+  text-align:center;
+  font-size:22px;
+  margin-top:10px;
+}
+
+.good{color:#20c997}
+.warn{color:#f7b731}
+.bad{color:#ff6b6b}
+
+.provider{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.badge{
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+}
+
+.badge.good{background:#20c99733;color:#20c997}
+.badge.warn{background:#f7b73133;color:#f7b731}
+.badge.bad{background:#ff6b6b33;color:#ff6b6b}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>💸 SahiPrice</h1>
+
+<div class="card">
+<label>City</label>
+<select id="city"></select>
+
+<label>Category</label>
+<select id="category"></select>
+
+<label>Subcategory</label>
+<select id="subcategory"></select>
+
+<label>Enter Price (PKR)</label>
+<input type="number" id="price">
+
+<button onclick="checkPrice()">Check Price</button>
+</div>
+
+<div class="card">
+<div id="result" class="result">Enter details to check price</div>
+</div>
+
+<div class="card">
+<h3>Alternatives</h3>
+<div id="providers"></div>
+</div>
+
+</div>
+
+<script>
+
+const data = {
+Rawalpindi:{
+  Meat:{
+    Chicken:["Meat 2 Meat","Pakeeza Meat"],
+    Beef:["Meat 2 Meat","Al Madina Meat"],
+    Mutton:["Pakeeza Meat","Al Madina Meat"]
+  },
+  "AC Repair":{
+    Repair:["Cool Care","Pak AC Services"],
+    Installation:["Cool Care","City Cooling"]
+  }
+},
+Lahore:{
+  Meat:{
+    Chicken:["Meat One","Al-Fatah Meat"],
+    Beef:["Meat One","Metro Meat"],
+    Mutton:["Al-Fatah Meat","Metro Meat"]
+  },
+  "AC Repair":{
+    Repair:["Cool Point","AirTech"],
+    Installation:["Cool Point","Lahore Cooling"]
+  }
+},
+Karachi:{
+  Meat:{
+    Chicken:["K&N's","Meat One"],
+    Beef:["K&N's","Metro Meat"],
+    Mutton:["Meat One","Metro Meat"]
+  },
+  "AC Repair":{
+    Repair:["Cool Breeze","Karachi AC"],
+    Installation:["Cool Breeze","AC Experts"]
+  }
+}
+};
+
+const priceRanges = {
+Meat:{Chicken:[1200,3000],Beef:[1500,3500],Mutton:[1800,5000]},
+"AC Repair":{Repair:[1000,4000],Installation:[2000,6000]}
+};
+
+const cityEl = document.getElementById("city");
+const catEl = document.getElementById("category");
+const subEl = document.getElementById("subcategory");
+
+// init
+Object.keys(data).forEach(c=>{
+  cityEl.innerHTML += `<option>${c}</option>`;
+});
+
+function loadCategories(){
+  catEl.innerHTML="";
+  Object.keys(data[cityEl.value]).forEach(c=>{
+    catEl.innerHTML += `<option>${c}</option>`;
+  });
+  loadSub();
+}
+
+function loadSub(){
+  subEl.innerHTML="";
+  Object.keys(data[cityEl.value][catEl.value]).forEach(s=>{
+    subEl.innerHTML += `<option>${s}</option>`;
+  });
+}
+
+cityEl.onchange = loadCategories;
+catEl.onchange = loadSub;
+
+loadCategories();
+
+// logic
+function checkPrice(){
+
+const city = cityEl.value;
+const cat = catEl.value;
+const sub = subEl.value;
+const price = Number(document.getElementById("price").value);
+
+if(!price){
+  alert("Enter price");
+  return;
+}
+
+const range = priceRanges[cat][sub];
+
+let status="", cls="";
+if(price < range[0]*0.8){ status="Cheap"; cls="good";}
+else if(price > range[1]*1.2){ status="Expensive"; cls="bad";}
+else{ status="Fair"; cls="warn"; }
+
+document.getElementById("result").innerHTML =
+`<span class="${cls}">${status}</span><br>
+<small>Expected: ${range[0]} - ${range[1]} PKR</small>`;
+
+const list = data[city][cat][sub];
+const container = document.getElementById("providers");
+container.innerHTML="";
+
+list.forEach(name=>{
+  const score = Math.floor(Math.random()*40)+60;
+
+  let label="Average", badge="warn";
+  if(score>80){label="Trusted";badge="good";}
+  else if(score<60){label="Risky";badge="bad";}
+
+  container.innerHTML += `
+  <div class="card provider">
+    <div>
+      <b>${name}</b><br>
+      <small>${cat} • ${sub}</small>
+    </div>
+    <div>
+      <div class="badge ${badge}">${label}</div>
+      <small>${score}/100</small>
+    </div>
+  </div>`;
+});
+
+}
+
+</script>
+
+</body>
+</html>
