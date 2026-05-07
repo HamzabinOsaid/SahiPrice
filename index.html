@@ -1,540 +1,648 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SahiPrice</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SahiPrice</title>
 
-    body {
-      font-family: system-ui, -apple-system, sans-serif;
-      background: #080e1c;
-      color: #e2e8f0;
-      min-height: 100vh;
-    }
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
 
-    .container {
-      max-width: 960px;
-      margin: auto;
-      padding: 28px 20px;
-    }
+body{
+  font-family:system-ui,-apple-system,sans-serif;
+  background:#080e1c;
+  color:#e2e8f0;
+  min-height:100vh;
+}
 
-    h1 {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 6px;
-      letter-spacing: -0.5px;
-    }
+.container{
+  max-width:960px;
+  margin:auto;
+  padding:28px 20px;
+}
 
-    .subtitle {
-      text-align: center;
-      color: #64748b;
-      font-size: 14px;
-      margin-bottom: 28px;
-    }
+h1{
+  text-align:center;
+  font-size:2rem;
+  margin-bottom:6px;
+  letter-spacing:-0.5px;
+}
 
-    .card {
-      background: #111827;
-      padding: 24px;
-      border-radius: 16px;
-      margin-bottom: 16px;
-      border: 1px solid #1e293b;
-    }
+.subtitle{
+  text-align:center;
+  color:#64748b;
+  font-size:14px;
+  margin-bottom:28px;
+}
 
-    .grid2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
+.card{
+  background:#111827;
+  padding:24px;
+  border-radius:16px;
+  margin-bottom:16px;
+  border:1px solid #1e293b;
+}
 
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 
-    label {
-      font-size: 12px;
-      font-weight: 600;
-      color: #94a3b8;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
+.field{display:flex;flex-direction:column;gap:6px}
 
-    select, input {
-      padding: 11px 14px;
-      border-radius: 10px;
-      border: 1px solid #1e293b;
-      background: #0f172a;
-      color: #e2e8f0;
-      font-size: 14px;
-      outline: none;
-      transition: border-color .2s;
-    }
+label{
+  font-size:12px;
+  font-weight:600;
+  color:#94a3b8;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
 
-    select:focus, input:focus {
-      border-color: #38bdf8;
-    }
+select,input{
+  padding:11px 14px;
+  border-radius:10px;
+  border:1px solid #1e293b;
+  background:#0f172a;
+  color:#e2e8f0;
+  font-size:14px;
+  outline:none;
+  transition:border-color .2s;
+}
 
-    .btn {
-      width: 100%;
-      margin-top: 8px;
-      padding: 14px;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #38bdf8, #818cf8);
-      color: #fff;
-      font-weight: 700;
-      font-size: 15px;
-      cursor: pointer;
-      transition: opacity .2s, transform .1s;
-    }
+select:focus,input:focus{border-color:#38bdf8}
 
-    .btn:hover {
-      opacity: .9;
-    }
+.btn{
+  width:100%;
+  margin-top:8px;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(135deg,#38bdf8,#818cf8);
+  color:#fff;
+  font-weight:700;
+  font-size:15px;
+  cursor:pointer;
+  transition:opacity .2s,transform .1s;
+}
+.btn:hover{opacity:.9}
+.btn:active{transform:scale(.98)}
 
-    .btn:active {
-      transform: scale(.98);
-    }
+/* Result */
+.result-box{
+  text-align:center;
+  padding:8px 0;
+}
 
-    /* Result */
-    .result-box {
-      text-align: center;
-      padding: 8px 0;
-    }
+.verdict{
+  font-size:2rem;
+  font-weight:800;
+  letter-spacing:-1px;
+}
 
-    .verdict {
-      font-size: 2rem;
-      font-weight: 800;
-      letter-spacing: -1px;
-    }
+.range-label{
+  margin-top:6px;
+  font-size:13px;
+  color:#64748b;
+}
 
-    .range-label {
-      margin-top: 6px;
-      font-size: 13px;
-      color: #64748b;
-    }
+.price-bar{
+  height:8px;
+  border-radius:99px;
+  background:#1e293b;
+  margin:14px 0 6px;
+  overflow:hidden;
+}
+.price-bar-fill{
+  height:100%;
+  border-radius:99px;
+  transition:width .6s ease;
+}
 
-    .price-bar {
-      height: 8px;
-      border-radius: 99px;
-      background: #1e293b;
-      margin: 14px 0 6px;
-      overflow: hidden;
-    }
+.good{color:#34d399}
+.warn{color:#fbbf24}
+.bad{color:#f87171}
 
-    .price-bar-fill {
-      height: 100%;
-      border-radius: 99px;
-      transition: width .6s ease;
-    }
+/* Category pills */
+.cat-grid{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:18px;
+}
 
-    .good { color: #34d399; }
-    .warn { color: #fbbf24; }
-    .bad { color: #f87171; }
+.cat-pill{
+  padding:7px 14px;
+  border-radius:99px;
+  border:1px solid #1e293b;
+  background:#0f172a;
+  color:#94a3b8;
+  font-size:13px;
+  cursor:pointer;
+  transition:all .2s;
+  user-select:none;
+}
 
-    /* Category pills */
-    .cat-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 18px;
-    }
+.cat-pill:hover{border-color:#38bdf8;color:#e2e8f0}
+.cat-pill.active{background:#1e3a5f;border-color:#38bdf8;color:#38bdf8;font-weight:600}
 
-    .cat-pill {
-      padding: 7px 14px;
-      border-radius: 99px;
-      border: 1px solid #1e293b;
-      background: #0f172a;
-      color: #94a3b8;
-      font-size: 13px;
-      cursor: pointer;
-      transition: all .2s;
-      user-select: none;
-    }
+.sub-grid{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:18px;
+}
 
-    .cat-pill:hover {
-      border-color: #38bdf8;
-      color: #e2e8f0;
-    }
+.sub-pill{
+  padding:6px 13px;
+  border-radius:99px;
+  border:1px solid #1e293b;
+  background:#0f172a;
+  color:#94a3b8;
+  font-size:12px;
+  cursor:pointer;
+  transition:all .2s;
+  user-select:none;
+}
 
-    .cat-pill.active {
-      background: #1e3a5f;
-      border-color: #38bdf8;
-      color: #38bdf8;
-      font-weight: 600;
-    }
+.sub-pill:hover{border-color:#818cf8;color:#e2e8f0}
+.sub-pill.active{background:#1e1b4b;border-color:#818cf8;color:#818cf8;font-weight:600}
 
-    .sub-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 18px;
-    }
+/* Shops */
+.shops-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:14px;
+}
 
-    .sub-pill {
-      padding: 6px 13px;
-      border-radius: 99px;
-      border: 1px solid #1e293b;
-      background: #0f172a;
-      color: #94a3b8;
-      font-size: 12px;
-      cursor: pointer;
-      transition: all .2s;
-      user-select: none;
-    }
+.shops-header h3{font-size:15px;font-weight:700}
+.shop-count{font-size:12px;color:#64748b}
 
-    .sub-pill:hover {
-      border-color: #818cf8;
-      color: #e2e8f0;
-    }
+.shop-card{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#0f172a;
+  border:1px solid #1e293b;
+  border-radius:12px;
+  padding:14px 16px;
+  margin-bottom:10px;
+  transition:border-color .2s;
+}
+.shop-card:hover{border-color:#334155}
 
-    .sub-pill.active {
-      background: #1e1b4b;
-      border-color: #818cf8;
-      color: #818cf8;
-      font-weight: 600;
-    }
+.shop-name{font-weight:600;font-size:14px;margin-bottom:2px}
+.shop-meta{font-size:12px;color:#64748b}
 
-    /* Shops */
-    .shops-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-    }
+.badge{
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:99px;
+  font-size:11px;
+  font-weight:600;
+}
 
-    .shops-header h3 {
-      font-size: 15px;
-      font-weight: 700;
-    }
+.badge.good{background:rgba(52,211,153,.15);color:#34d399}
+.badge.warn{background:rgba(251,191,36,.15);color:#fbbf24}
+.badge.bad{background:rgba(248,113,113,.15);color:#f87171}
 
-    .shop-count {
-      font-size: 12px;
-      color: #64748b;
-    }
+.score{font-size:11px;color:#64748b;text-align:right;margin-top:3px}
 
-    .shop-card {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #0f172a;
-      border: 1px solid #1e293b;
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 10px;
-      transition: border-color .2s;
-    }
+.empty{text-align:center;padding:24px;color:#475569;font-size:14px}
 
-    .shop-card:hover {
-      border-color: #334155;
-    }
+/* Section title */
+.section-title{
+  font-size:13px;
+  font-weight:700;
+  color:#64748b;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+  margin-bottom:10px;
+}
 
-    .shop-name {
-      font-weight: 600;
-      font-size: 14px;
-      margin-bottom: 2px;
-    }
-
-    .shop-meta {
-      font-size: 12px;
-      color: #64748b;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 99px;
-      font-size: 11px;
-      font-weight: 600;
-    }
-
-    .badge.good {
-      background: rgba(52, 211, 153, .15);
-      color: #34d399;
-    }
-
-    .badge.warn {
-      background: rgba(251, 191, 36, .15);
-      color: #fbbf24;
-    }
-
-    .badge.bad {
-      background: rgba(248, 113, 113, .15);
-      color: #f87171;
-    }
-
-    .score {
-      font-size: 11px;
-      color: #64748b;
-      text-align: right;
-      margin-top: 3px;
-    }
-
-    .empty {
-      text-align: center;
-      padding: 24px;
-      color: #475569;
-      font-size: 14px;
-    }
-
-    /* Section title */
-    .section-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: #64748b;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 10px;
-    }
-
-    @media(max-width: 580px) {
-      .grid2 {
-        grid-template-columns: 1fr;
-      }
-      h1 {
-        font-size: 1.5rem;
-      }
-    }
-  </style>
+@media(max-width:580px){
+  .grid2{grid-template-columns:1fr}
+  h1{font-size:1.5rem}
+}
+</style>
 </head>
+
 <body>
-  <div class="container">
-    <h1>💸 SahiPrice</h1>
-    <p class="subtitle">Check if you're paying a fair price in Pakistan</p>
 
-    <div class="card">
-      <div class="grid2">
-        <div class="field">
-          <label>City</label>
-          <select id="city" onchange="loadCategories()"></select>
-        </div>
-        <div class="field">
-          <label>Enter Price (PKR)</label>
-          <input type="number" id="price" placeholder="e.g. 2500" min="0">
-        </div>
-      </div>
+<div class="container">
 
-      <label style="margin-top: 18px; display: block;">Category</label>
-      <div class="cat-grid" id="cat-grid"></div>
+<h1>💸 SahiPrice</h1>
+<p class="subtitle">Check if you're paying a fair price in Pakistan</p>
 
-      <label>Subcategory</label>
-      <div class="sub-grid" id="sub-grid"></div>
-
-      <button class="btn" onclick="checkPrice()">✦ Check Price</button>
+<div class="card">
+  <div class="grid2">
+    <div class="field">
+      <label>City</label>
+      <select id="city" onchange="loadCategories()"></select>
     </div>
-
-    <div class="card" id="result-card" style="display: none;">
-      <div class="result-box">
-        <div class="verdict" id="verdict"></div>
-        <div class="range-label" id="range-label"></div>
-        <div class="price-bar">
-          <div class="price-bar-fill" id="bar-fill"></div>
-        </div>
-        <small id="bar-hint" style="font-size: 12px; color: #64748b;"></small>
-      </div>
-    </div>
-
-    <div class="card" id="shops-card" style="display: none;">
-      <div class="shops-header">
-        <h3>Suggested Shops / Services</h3>
-        <span class="shop-count" id="shop-count"></span>
-      </div>
-      <div id="providers"></div>
+    <div class="field">
+      <label>Enter Price (PKR)</label>
+      <input type="number" id="price" placeholder="e.g. 2500" min="0">
     </div>
   </div>
 
-  <script>
-    /* ===================== DATA ===================== */
-    const data = {
-      "Rawalpindi": {
-        "🥩 Meat & Poultry": {
-          "Chicken (per kg)": { range: [700, 1000], shops: ["Meat 2 Meat Rawalpindi", "Pakeeza Meat", "Al-Baraka Poultry", "Saddar Chicken House", "Raja Broast & Meat"] },
-          "Beef (per kg)": { range: [1500, 2500], shops: ["Meat 2 Meat Rawalpindi", "Al Madina Meat", "Faisal Meat Shop", "Liaquat Bazar Butcher", "Cantt Meat Center"] },
-          "Mutton (per kg)": { range: [2500, 4000], shops: ["Pakeeza Meat", "Al Madina Meat", "Bahadur Khan Meat", "Saddar Mutton House", "City Meat Market"] },
-          "Mince (per kg)": { range: [900, 1400], shops: ["Meat 2 Meat Rawalpindi", "Pakeeza Meat", "Al Madina Meat"] },
-          "Sausages / Kabab": { range: [300, 700], shops: ["Al-Shams Deli", "Pakeeza Meat", "Meat 2 Meat Rawalpindi"] }
-        },
-        "🥦 Vegetables & Fruit": {
-          "Tomatoes (per kg)": { range: [60, 160], shops: ["Raja Bazaar Sabzi Mandi", "Liaquat Bazar Veggie", "Green Fresh Market", "City Sabzi Market"] },
-          "Potatoes (per kg)": { range: [50, 120], shops: ["Raja Bazaar Sabzi Mandi", "Liaquat Bazar Veggie", "Fresh Produce Saddar"] },
-          "Onions (per kg)": { range: [60, 140], shops: ["Raja Bazaar Sabzi Mandi", "Green Fresh Market", "Cantt Vegetable Stall"] },
-          "Apples (per kg)": { range: [200, 450], shops: ["Fruit Wala Saddar", "Cantt Fruit Stand", "Fresh Bazar RWP"] },
-          "Bananas (per dozen)": { range: [80, 160], shops: ["Fruit Wala Saddar", "Liaquat Bazar Fruit", "Green Fresh Market"] }
-        },
-        // ... (rest of Rawalpindi data continues with proper indentation)
-        // Note: I've formatted the beginning - the full data structure follows the same pattern
-      },
-      "Lahore": { /* Lahore data */ },
-      "Karachi": { /* Karachi data */ },
-      "Islamabad": { /* Islamabad data */ }
-    };
+  <label style="margin-top:18px;display:block">Category</label>
+  <div class="cat-grid" id="cat-grid"></div>
 
-    /* ===================== STATE ===================== */
-    let selectedCat = null;
-    let selectedSub = null;
+  <label>Subcategory</label>
+  <div class="sub-grid" id="sub-grid"></div>
 
-    /* ===================== INIT ===================== */
-    const cityEl = document.getElementById("city");
-    Object.keys(data).forEach(c => {
-      cityEl.innerHTML += `<option value="${c}">${c}</option>`;
-    });
-    loadCategories();
+  <button class="btn" onclick="checkPrice()">✦ Check Price</button>
+</div>
 
-    /* ===================== LOADERS ===================== */
-    function loadCategories() {
-      selectedCat = null;
-      selectedSub = null;
-      const city = cityEl.value;
-      const cats = Object.keys(data[city]);
-      const grid = document.getElementById("cat-grid");
-      grid.innerHTML = "";
-      cats.forEach(cat => {
-        const pill = document.createElement("div");
-        pill.className = "cat-pill";
-        pill.textContent = cat;
-        pill.onclick = () => selectCat(cat, pill);
-        grid.appendChild(pill);
-      });
-      document.getElementById("sub-grid").innerHTML = "<span style='color:#475569;font-size:13px'>Select a category first</span>";
-      document.getElementById("result-card").style.display = "none";
-      document.getElementById("shops-card").style.display = "none";
+<div class="card" id="result-card" style="display:none">
+  <div class="result-box">
+    <div class="verdict" id="verdict"></div>
+    <div class="range-label" id="range-label"></div>
+    <div class="price-bar"><div class="price-bar-fill" id="bar-fill"></div></div>
+    <small id="bar-hint" style="font-size:12px;color:#64748b"></small>
+  </div>
+</div>
+
+<div class="card" id="shops-card" style="display:none">
+  <div class="shops-header">
+    <h3>Suggested Shops / Services</h3>
+    <span class="shop-count" id="shop-count"></span>
+  </div>
+  <div id="providers"></div>
+</div>
+
+</div>
+
+<script>
+
+/* ===================== DATA ===================== */
+
+const data = {
+
+  Rawalpindi:{
+    "🥩 Meat & Poultry":{
+      "Chicken (per kg)":{ range:[700,1000], shops:["Meat 2 Meat Rawalpindi","Pakeeza Meat","Al-Baraka Poultry","Saddar Chicken House","Raja Broast & Meat"] },
+      "Beef (per kg)":{ range:[1500,2500], shops:["Meat 2 Meat Rawalpindi","Al Madina Meat","Faisal Meat Shop","Liaquat Bazar Butcher","Cantt Meat Center"] },
+      "Mutton (per kg)":{ range:[2500,4000], shops:["Pakeeza Meat","Al Madina Meat","Bahadur Khan Meat","Saddar Mutton House","City Meat Market"] },
+      "Mince (per kg)":{ range:[900,1400], shops:["Meat 2 Meat Rawalpindi","Pakeeza Meat","Al Madina Meat"] },
+      "Sausages / Kabab":{ range:[300,700], shops:["Al-Shams Deli","Pakeeza Meat","Meat 2 Meat Rawalpindi"] }
+    },
+    "🥦 Vegetables & Fruit":{
+      "Tomatoes (per kg)":{ range:[60,160], shops:["Raja Bazaar Sabzi Mandi","Liaquat Bazar Veggie","Green Fresh Market","City Sabzi Market"] },
+      "Potatoes (per kg)":{ range:[50,120], shops:["Raja Bazaar Sabzi Mandi","Liaquat Bazar Veggie","Fresh Produce Saddar"] },
+      "Onions (per kg)":{ range:[60,140], shops:["Raja Bazaar Sabzi Mandi","Green Fresh Market","Cantt Vegetable Stall"] },
+      "Apples (per kg)":{ range:[200,450], shops:["Fruit Wala Saddar","Cantt Fruit Stand","Fresh Bazar RWP"] },
+      "Bananas (per dozen)":{ range:[80,160], shops:["Fruit Wala Saddar","Liaquat Bazar Fruit","Green Fresh Market"] }
+    },
+    "❄️ AC Services":{
+      "AC Repair":{ range:[1500,5000], shops:["Cool Care Services","Pak AC Experts","Shaheen Cooling","Cantt AC Workshop","City Cool RWP"] },
+      "AC Installation":{ range:[2500,6000], shops:["Cool Care Services","City Cooling RWP","Pak AC Experts","National AC Services"] },
+      "AC Gas Refill":{ range:[2000,4500], shops:["Cool Care Services","Shaheen Cooling","AC Solutions RWP","Pak AC Experts"] },
+      "AC Servicing":{ range:[1000,2500], shops:["Pak AC Experts","City Cool RWP","Cool Care Services","National AC Services"] }
+    },
+    "🛵 Mobile Repair":{
+      "Screen Replacement":{ range:[2000,12000], shops:["iTech Saddar","Mobile Zone RWP","Cantt Phone Repair","Digital Fix Center","iFix Rawalpindi"] },
+      "Battery Replacement":{ range:[500,2500], shops:["Mobile Zone RWP","iTech Saddar","Phone Doctor RWP"] },
+      "Charging Port Fix":{ range:[500,2000], shops:["iTech Saddar","Digital Fix Center","Mobile Zone RWP"] },
+      "Software/Flash":{ range:[500,1500], shops:["Cantt Phone Repair","Mobile Zone RWP","iTech Saddar"] }
+    },
+    "🍽️ Food & Restaurants":{
+      "Biryani (plate)":{ range:[250,700], shops:["Student Biryani RWP","Al-Shams Restaurant","Karachi Darbar RWP","Usmania Restaurant","Food Street Rawalpindi"] },
+      "Burger":{ range:[200,800], shops:["Lahori Burger RWP","Peri Peri RWP","Burger Lab RWP","The Burger Spot","Bun Kebab Corner"] },
+      "Pizza (medium)":{ range:[600,2000], shops:["Pizza Hut Rawalpindi","Domino's RWP","Pizza Point","2 Bros Pizza RWP"] },
+      "Desi Breakfast":{ range:[150,500], shops:["Pindi Paye House","Al-Mustafa Nashta","Saddar Nashta Corner","Cantt Breakfast Dhaba"] },
+      "Chai (cup)":{ range:[30,100], shops:["Pindi Dhaba","Saddar Tea House","Irani Chai Rawalpindi"] }
+    },
+    "🏠 Home Services":{
+      "Plumber (per visit)":{ range:[500,2000], shops:["Pindi Plumber Pro","Home Fix RWP","City Plumbers","Hasan Plumbing Services"] },
+      "Electrician (per visit)":{ range:[500,2500], shops:["Pak Electric Services","City Electricians RWP","Home Tech Services","Power Fix RWP"] },
+      "House Cleaning (per session)":{ range:[2000,6000], shops:["CleanPro RWP","Sapphire Cleaning","Home Fresh Services","City Clean"] },
+      "Painter (per day)":{ range:[1500,4000], shops:["Color Master RWP","Pindi Paint Works","Wall Art Services","City Painters"] }
+    },
+    "👗 Clothes & Tailoring":{
+      "Shirt Stitching":{ range:[400,1500], shops:["Saddar Darzi","Master Tailor RWP","Fashion Stitch RWP","Classic Tailors"] },
+      "Shalwar Kameez Stitching":{ range:[600,2500], shops:["Pindi Tailors","Royal Stitch RWP","Classic Tailors","Cantt Darzi"] },
+      "T-Shirt (ready-made)":{ range:[500,2000], shops:["Al-Hamra Cloth","Saddar Garments","Star Clothing RWP","Bonanza RWP"] },
+      "Jeans (ready-made)":{ range:[1500,5000], shops:["Levis RWP","Saddar Denim","Al-Hamra Cloth","Style Park RWP"] }
+    },
+    "🚗 Auto & Transport":{
+      "Car Wash":{ range:[300,1000], shops:["Speed Wash RWP","Pindi Auto Wash","Crystal Car Care","Cantt Car Wash"] },
+      "Oil Change (per litre)":{ range:[700,1500], shops:["Total Parco RWP","PSO Station Saddar","Shell Rawalpindi","Auto Zone RWP"] },
+      "Tyre Puncture Fix":{ range:[150,400], shops:["Pindi Tyre Shop","City Tyre Works","Cantt Tyre Center","Road Fix RWP"] },
+      "Uber/Careem (per km)":{ range:[25,50], shops:["Uber","Careem","Bykea","inDriver"] }
     }
+  },
 
-    function selectCat(cat, pill) {
-      selectedCat = cat;
-      selectedSub = null;
-      document.querySelectorAll(".cat-pill").forEach(p => p.classList.remove("active"));
-      pill.classList.add("active");
-      loadSubs(cat);
+  Lahore:{
+    "🥩 Meat & Poultry":{
+      "Chicken (per kg)":{ range:[700,1000], shops:["Meat One Gulberg","Al-Fatah Meat Lahore","K&N's Lahore","Chaudhry Murgh Mahal","Defense Poultry"] },
+      "Beef (per kg)":{ range:[1500,2500], shops:["Meat One Lahore","Metro Meat Lahore","Butt Butcher Anarkali","Liberty Meat Shop","Chaudhry Beef House"] },
+      "Mutton (per kg)":{ range:[2500,4000], shops:["Al-Fatah Meat","Meat One","Gourmet Butcher Lahore","Cantt Mutton House","Old City Butcher"] },
+      "Mince (per kg)":{ range:[900,1400], shops:["Meat One Lahore","Al-Fatah Meat","K&N's Lahore"] },
+      "Sausages / Kabab":{ range:[300,700], shops:["K&N's Lahore","Meat One Lahore","Deli Shop Gulberg"] }
+    },
+    "🥦 Vegetables & Fruit":{
+      "Tomatoes (per kg)":{ range:[60,160], shops:["Lahore Mandi","Township Veggie Market","Liberty Sabzi Mandi","Model Town Fresh Market"] },
+      "Potatoes (per kg)":{ range:[50,120], shops:["Lahore Mandi","Metro Cash & Carry Lahore","Al-Fatah Hypermarket"] },
+      "Onions (per kg)":{ range:[60,140], shops:["Township Veggie Market","Lahore Mandi","Garden Town Sabzi"] },
+      "Apples (per kg)":{ range:[200,450], shops:["Liberty Fruit Market","Gulberg Fruit Wala","DHA Fruit Center"] },
+      "Bananas (per dozen)":{ range:[80,160], shops:["Liberty Fruit Market","Model Town Fruit","Iqbal Town Fruit Stand"] }
+    },
+    "❄️ AC Services":{
+      "AC Repair":{ range:[1500,5000], shops:["Cool Point Lahore","AirTech Services","Pak Cooling Lahore","National Air Lahore","Fix AC Gulberg"] },
+      "AC Installation":{ range:[2500,6000], shops:["Cool Point Lahore","Lahore Cooling Center","AirTech Services","Comfort Zone AC"] },
+      "AC Gas Refill":{ range:[2000,4500], shops:["AirTech Services","Cool Point Lahore","AC Masters Lahore","Pak Cooling Lahore"] },
+      "AC Servicing":{ range:[1000,2500], shops:["Lahore Cooling Center","Cool Point Lahore","National Air Lahore","Fix AC Gulberg"] }
+    },
+    "🛵 Mobile Repair":{
+      "Screen Replacement":{ range:[2000,12000], shops:["iRepair Lahore","Phone Fix Liberty","Hafeez Center Tech","Tech Spot Gulberg","Mobile Masters Lahore"] },
+      "Battery Replacement":{ range:[500,2500], shops:["Hafeez Center Tech","iRepair Lahore","Phone Hub Lahore"] },
+      "Charging Port Fix":{ range:[500,2000], shops:["iRepair Lahore","Tech Spot Gulberg","Hafeez Center Tech"] },
+      "Software/Flash":{ range:[500,1500], shops:["Phone Fix Liberty","Hafeez Center Tech","Mobile Masters Lahore"] }
+    },
+    "🍽️ Food & Restaurants":{
+      "Biryani (plate)":{ range:[250,700], shops:["Bundu Khan Lahore","Saloos Lahore","Haveli Restaurant","Café Zouk","Al-Hamra Restaurant"] },
+      "Burger":{ range:[200,800], shops:["Burger Hub Lahore","Smash Lahore","Burger Baron","The Burger Spot Lahore","Buddy's Burger"] },
+      "Pizza (medium)":{ range:[600,2000], shops:["Pizza Hut Lahore","Domino's Lahore","Pizza Point Lahore","Al-Baik Lahore"] },
+      "Desi Breakfast":{ range:[150,500], shops:["Waris Nihari","Phajja Siri Paya","Old Anarkali Nashta","Data Darbar Nashta","Pak Tea House"] },
+      "Chai (cup)":{ range:[30,100], shops:["Pak Tea House","Café Aylanto","Burns Road Chai","Gawalmandi Dhaba"] }
+    },
+    "🏠 Home Services":{
+      "Plumber (per visit)":{ range:[500,2000], shops:["Lahore Plumbers","Home Fix Lahore","Raza Plumbing","DHA Plumber Services"] },
+      "Electrician (per visit)":{ range:[500,2500], shops:["Lahore Electric Works","Home Tech Lahore","Power Fix Gulberg","Safe Electric Lahore"] },
+      "House Cleaning (per session)":{ range:[2000,6000], shops:["CleanPro Lahore","Spotless Lahore","HomeZone Cleaning","Neat & Clean Services"] },
+      "Painter (per day)":{ range:[1500,4000], shops:["Color Art Lahore","Wall Craft Lahore","Gulberg Painters","Paint Masters Lahore"] }
+    },
+    "👗 Clothes & Tailoring":{
+      "Shirt Stitching":{ range:[400,1500], shops:["Anarkali Tailor","Liberty Darzi","Gulberg Tailors","Classic Stitch Lahore"] },
+      "Shalwar Kameez Stitching":{ range:[600,2500], shops:["Anarkali Tailor","Model Town Tailors","Royal Stitch Lahore","Heritage Darzi"] },
+      "T-Shirt (ready-made)":{ range:[500,2000], shops:["Bonanza Satrangi Lahore","Outfitters Lahore","Sapphire Lahore","Khaadi Lahore"] },
+      "Jeans (ready-made)":{ range:[1500,5000], shops:["Levis Lahore","Outfitters Lahore","Breakout Lahore","Next Lahore"] }
+    },
+    "🚗 Auto & Transport":{
+      "Car Wash":{ range:[300,1000], shops:["Speed Wash Lahore","Gloss & Go DHA","Crystal Car Care Lahore","Auto Shine Gulberg"] },
+      "Oil Change (per litre)":{ range:[700,1500], shops:["Total Parco Lahore","PSO Liberty","Shell Gulberg","Auto Zone Lahore"] },
+      "Tyre Puncture Fix":{ range:[150,400], shops:["Gulberg Tyre Shop","DHA Tyre Works","Liberty Tyre Center","Road Pro Lahore"] },
+      "Uber/Careem (per km)":{ range:[25,50], shops:["Uber","Careem","Bykea","inDriver"] }
+    },
+    "💊 Health & Pharmacy":{
+      "Doctor Consultation":{ range:[500,3000], shops:["Shaukat Khanum Lahore","Services Hospital","Hameed Latif Hospital","Life Care Clinic","DHA Clinic Lahore"] },
+      "Medicine (per strip)":{ range:[50,500], shops:["Fazal Din Pharma","Hamdard Lahore","Qarshi Pharmacy","Servaid Lahore"] },
+      "Lab Test (blood CBC)":{ range:[600,2000], shops:["Chughtai Lab","Dr. Essa Lab Lahore","Imdad Diagnostics","PathCare Lahore"] }
     }
+  },
 
-    function loadSubs(cat) {
-      const city = cityEl.value;
-      const subs = Object.keys(data[city][cat]);
-      const grid = document.getElementById("sub-grid");
-      grid.innerHTML = "";
-      subs.forEach(sub => {
-        const pill = document.createElement("div");
-        pill.className = "sub-pill";
-        pill.textContent = sub;
-        pill.onclick = () => selectSub(sub, pill);
-        grid.appendChild(pill);
-      });
+  Karachi:{
+    "🥩 Meat & Poultry":{
+      "Chicken (per kg)":{ range:[700,1000], shops:["K&N's Karachi","Meat One Karachi","Clifton Poultry","Al-Maidah Meat","Korangi Murgh House"] },
+      "Beef (per kg)":{ range:[1500,2500], shops:["K&N's Karachi","Metro Meat Karachi","Kharadar Butcher","Bohri Bazaar Meat","Defense Beef House"] },
+      "Mutton (per kg)":{ range:[2500,4000], shops:["Meat One Karachi","Metro Meat Karachi","Clifton Mutton House","Burns Road Butcher","Al-Maidah Meat"] },
+      "Mince (per kg)":{ range:[900,1400], shops:["K&N's Karachi","Meat One Karachi","Al-Maidah Meat"] },
+      "Sausages / Kabab":{ range:[300,700], shops:["K&N's Karachi","Meat One Karachi","Clifton Deli"] }
+    },
+    "🥦 Vegetables & Fruit":{
+      "Tomatoes (per kg)":{ range:[60,160], shops:["Karachi Mandi Lyari","Malir Sabzi Market","Empress Market Veggie","Tariq Road Sabzi","Clifton Fresh Market"] },
+      "Potatoes (per kg)":{ range:[50,120], shops:["Empress Market","Metro Cash & Carry Karachi","Imtiaz Superstore"] },
+      "Onions (per kg)":{ range:[60,140], shops:["Empress Market","Karachi Mandi","Malir Veggie Market"] },
+      "Apples (per kg)":{ range:[200,450], shops:["Burns Road Fruit Market","Clifton Fruit Wala","DHA Karachi Fruit"] },
+      "Bananas (per dozen)":{ range:[80,160], shops:["Burns Road Fruit Market","Saddar Fruit Stand","Tariq Road Fruit"] }
+    },
+    "❄️ AC Services":{
+      "AC Repair":{ range:[1500,5000], shops:["Cool Breeze Karachi","Karachi AC Services","Arctic Air","Pak Cooling KHI","DHA AC Workshop"] },
+      "AC Installation":{ range:[2500,6000], shops:["Cool Breeze Karachi","AC Experts KHI","Karachi AC Services","Comfort Zone Karachi"] },
+      "AC Gas Refill":{ range:[2000,4500], shops:["AC Experts KHI","Cool Breeze Karachi","Pak Cooling KHI","Arctic Air Karachi"] },
+      "AC Servicing":{ range:[1000,2500], shops:["Karachi AC Services","Cool Breeze Karachi","DHA AC Workshop","Arctic Air"] }
+    },
+    "🛵 Mobile Repair":{
+      "Screen Replacement":{ range:[2000,12000], shops:["Mobile Mall Saddar","iRepair Karachi","Tariq Road Tech","Phone Xpert KHI","DHA Mobile Fix"] },
+      "Battery Replacement":{ range:[500,2500], shops:["Mobile Mall Saddar","iRepair Karachi","Tariq Road Tech"] },
+      "Charging Port Fix":{ range:[500,2000], shops:["iRepair Karachi","Phone Xpert KHI","Mobile Mall Saddar"] },
+      "Software/Flash":{ range:[500,1500], shops:["Tariq Road Tech","Mobile Mall Saddar","iRepair Karachi"] }
+    },
+    "🍽️ Food & Restaurants":{
+      "Biryani (plate)":{ range:[250,700], shops:["Student Biryani Karachi","Bundu Khan KHI","Usmania Restaurant KHI","Burns Road Biryani","Kolachi Restaurant"] },
+      "Burger":{ range:[200,800], shops:["Johnny & Jugnu KHI","Smash KHI","Brodys Karachi","Burger O Clock","Eatsome KHI"] },
+      "Pizza (medium)":{ range:[600,2000], shops:["Pizza Hut Karachi","Domino's Karachi","Mamma Mia Pizza","Crust Bros KHI"] },
+      "Desi Breakfast":{ range:[150,500], shops:["Burns Road Nihari","Karachi Halwa Puri","Nalli Nihari House","Saddar Nashta Point","Bohri Bazaar Breakfast"] },
+      "Chai (cup)":{ range:[30,100], shops:["Irani Chai Saddar","Burns Road Tea","Café Pyala KHI","Clifton Dhaba"] }
+    },
+    "🏠 Home Services":{
+      "Plumber (per visit)":{ range:[500,2000], shops:["Karachi Plumbing Co","Home Fix KHI","Clifton Plumbers","DHA Plumber Services"] },
+      "Electrician (per visit)":{ range:[500,2500], shops:["Power Pro Karachi","Electric Works KHI","Home Tech KHI","Safe Electric Clifton"] },
+      "House Cleaning (per session)":{ range:[2000,6000], shops:["Cleaners KHI","SparkleHome Karachi","Maid Easy KHI","City Shine Services"] },
+      "Painter (per day)":{ range:[1500,4000], shops:["Color Pro Karachi","Clifton Painters","Wall Art KHI","Brush Masters Karachi"] }
+    },
+    "👗 Clothes & Tailoring":{
+      "Shirt Stitching":{ range:[400,1500], shops:["Saddar Darzi","Tariq Road Tailors","Clifton Tailor","Bahadurabad Stitch"] },
+      "Shalwar Kameez Stitching":{ range:[600,2500], shops:["Bohri Bazaar Darzi","Saddar Tailors","DHA Tailor Center","Al-Karam Stitching"] },
+      "T-Shirt (ready-made)":{ range:[500,2000], shops:["Khaadi Karachi","Outfitters KHI","Sapphire KHI","Bonanza KHI"] },
+      "Jeans (ready-made)":{ range:[1500,5000], shops:["Levis Karachi","Outfitters KHI","Breakout KHI","Next Karachi"] }
+    },
+    "🚗 Auto & Transport":{
+      "Car Wash":{ range:[300,1000], shops:["Karachi Car Wash","Speed Shine KHI","Clifton Auto Clean","DHA Car Wash"] },
+      "Oil Change (per litre)":{ range:[700,1500], shops:["Total Parco KHI","PSO DHA","Shell Clifton","Auto Zone Karachi"] },
+      "Tyre Puncture Fix":{ range:[150,400], shops:["Tariq Road Tyre","Clifton Tyre Works","Saddar Tyre Center","Road Pro KHI"] },
+      "Uber/Careem (per km)":{ range:[25,50], shops:["Uber","Careem","Bykea","inDriver"] }
+    },
+    "💊 Health & Pharmacy":{
+      "Doctor Consultation":{ range:[500,3000], shops:["Aga Khan Hospital","Liaquat National Hospital","South City Hospital","Tabba Heart Institute","Clifton Clinic"] },
+      "Medicine (per strip)":{ range:[50,500], shops:["Fazal Din KHI","D-Watson KHI","Hamdard Karachi","Servaid Karachi"] },
+      "Lab Test (blood CBC)":{ range:[600,2000], shops:["Chughtai Lab KHI","Agha Khan Lab","Essa Lab Karachi","HealthLine Labs"] }
     }
+  },
 
-    function selectSub(sub, pill) {
-      selectedSub = sub;
-      document.querySelectorAll(".sub-pill").forEach(p => p.classList.remove("active"));
-      pill.classList.add("active");
+  Islamabad:{
+    "🥩 Meat & Poultry":{
+      "Chicken (per kg)":{ range:[700,1000], shops:["Meat One F-10","Al-Fatah ISB","Islamabad Murgh Mahal","G-11 Poultry","Super Market Meat"] },
+      "Beef (per kg)":{ range:[1500,2500], shops:["Meat One ISB","Al-Fatah ISB","Jinnah Super Butcher","G-9 Meat Shop","Capital Beef House"] },
+      "Mutton (per kg)":{ range:[2500,4000], shops:["Meat One ISB","Al-Fatah ISB","Super Market Mutton","G-11 Meat","Islamabad Butchers"] },
+      "Mince (per kg)":{ range:[900,1400], shops:["Meat One ISB","Al-Fatah ISB","Islamabad Murgh Mahal"] },
+      "Sausages / Kabab":{ range:[300,700], shops:["Al-Fatah ISB","Meat One ISB","Deli One Islamabad"] }
+    },
+    "🥦 Vegetables & Fruit":{
+      "Tomatoes (per kg)":{ range:[60,160], shops:["Sabzi Mandi ISB","G-11 Vegetable Market","Al-Fatah Hypermarket ISB","Rawal Mart"] },
+      "Potatoes (per kg)":{ range:[50,120], shops:["G-11 Vegetable Market","Metro Cash & Carry ISB","Al-Fatah ISB"] },
+      "Onions (per kg)":{ range:[60,140], shops:["Sabzi Mandi ISB","G-11 Veggie","Super Market Sabzi"] },
+      "Apples (per kg)":{ range:[200,450], shops:["F-10 Fruit Market","Jinnah Super Fruit","G-9 Fruit Stall"] },
+      "Bananas (per dozen)":{ range:[80,160], shops:["F-10 Fruit Market","Blue Area Fruit","Super Market Fruit ISB"] }
+    },
+    "❄️ AC Services":{
+      "AC Repair":{ range:[1500,5000], shops:["Capital Cooling ISB","Tech Air ISB","Islamabad AC Workshop","Cool Fix ISB","National Air ISB"] },
+      "AC Installation":{ range:[2500,6000], shops:["Capital Cooling ISB","Tech Air ISB","Pak Cooling ISB","Cool Fix ISB"] },
+      "AC Gas Refill":{ range:[2000,4500], shops:["Tech Air ISB","Capital Cooling ISB","AC Masters ISB","Islamabad AC Workshop"] },
+      "AC Servicing":{ range:[1000,2500], shops:["Pak Cooling ISB","Capital Cooling ISB","Cool Fix ISB","Tech Air ISB"] }
+    },
+    "🛵 Mobile Repair":{
+      "Screen Replacement":{ range:[2000,12000], shops:["iTech ISB","Phone Fix Jinnah Super","Blue Area Mobiles","Tech Hub ISB","iFix Islamabad"] },
+      "Battery Replacement":{ range:[500,2500], shops:["iTech ISB","Blue Area Mobiles","Phone Fix Jinnah Super"] },
+      "Charging Port Fix":{ range:[500,2000], shops:["iTech ISB","Tech Hub ISB","Blue Area Mobiles"] },
+      "Software/Flash":{ range:[500,1500], shops:["Phone Fix Jinnah Super","Blue Area Mobiles","iTech ISB"] }
+    },
+    "🍽️ Food & Restaurants":{
+      "Biryani (plate)":{ range:[250,700], shops:["Student Biryani ISB","Monal Restaurant","Islamabad Club","Desi Dhaba F-7","Al-Shams ISB"] },
+      "Burger":{ range:[200,800], shops:["Burger Hub ISB","Smash ISB","Johnny & Jugnu ISB","Brodys ISB","The Burger Spot ISB"] },
+      "Pizza (medium)":{ range:[600,2000], shops:["Pizza Hut ISB","Domino's ISB","2 Bros Pizza ISB","Cosa Nostra ISB"] },
+      "Desi Breakfast":{ range:[150,500], shops:["Bundu Khan ISB","Al-Nafees Nashta","G-9 Dhaba","Islamabad Paye House","F-6 Nashta Point"] },
+      "Chai (cup)":{ range:[30,100], shops:["Chai Wala ISB","F-7 Dhaba","Islamabad Tea House","Usmania ISB"] }
+    },
+    "🏠 Home Services":{
+      "Plumber (per visit)":{ range:[500,2000], shops:["Capital Plumbers","Home Fix ISB","F-10 Plumbing Services","Islamabad Plumbers Co"] },
+      "Electrician (per visit)":{ range:[500,2500], shops:["Capital Electric ISB","Home Tech ISB","Power Fix ISB","Safe Electric Islamabad"] },
+      "House Cleaning (per session)":{ range:[2000,6000], shops:["CleanPro ISB","Spotless Islamabad","Home Fresh ISB","City Shine ISB"] },
+      "Painter (per day)":{ range:[1500,4000], shops:["Color Art ISB","Capital Painters","Wall Craft ISB","Islamabad Paint Works"] }
+    },
+    "👗 Clothes & Tailoring":{
+      "Shirt Stitching":{ range:[400,1500], shops:["Jinnah Super Tailor","F-7 Darzi","Super Market Tailors","Classic Stitch ISB"] },
+      "Shalwar Kameez Stitching":{ range:[600,2500], shops:["Jinnah Super Tailor","F-10 Tailors","Royal Stitch ISB","Capital Darzi"] },
+      "T-Shirt (ready-made)":{ range:[500,2000], shops:["Khaadi Islamabad","Outfitters ISB","Sapphire ISB","Bonanza ISB"] },
+      "Jeans (ready-made)":{ range:[1500,5000], shops:["Levis ISB","Outfitters ISB","Breakout ISB","Next ISB"] }
+    },
+    "🚗 Auto & Transport":{
+      "Car Wash":{ range:[300,1000], shops:["Capital Car Wash","Speed Shine ISB","Crystal Auto Care ISB","F-10 Car Wash"] },
+      "Oil Change (per litre)":{ range:[700,1500], shops:["Total Parco ISB","PSO F-10","Shell Islamabad","Auto Zone ISB"] },
+      "Tyre Puncture Fix":{ range:[150,400], shops:["Jinnah Super Tyre","G-11 Tyre Shop","Islamabad Tyre Center","Road Fix ISB"] },
+      "Uber/Careem (per km)":{ range:[25,50], shops:["Uber","Careem","Bykea","inDriver"] }
+    },
+    "💊 Health & Pharmacy":{
+      "Doctor Consultation":{ range:[500,3000], shops:["PIMS Hospital","Shifa International","Quaid-e-Azam Hospital","Islamabad Diagnostic Center","CDA Hospital"] },
+      "Medicine (per strip)":{ range:[50,500], shops:["Fazal Din ISB","D-Watson ISB","Hamdard ISB","Servaid ISB"] },
+      "Lab Test (blood CBC)":{ range:[600,2000], shops:["Chughtai Lab ISB","Islamabad Diagnostics","Shifa Lab","PathCare ISB"] }
     }
+  }
+};
 
-    /* ===================== CHECK PRICE ===================== */
-    function checkPrice() {
-      if (!selectedCat) {
-        alert("Please select a category");
-        return;
-      }
-      if (!selectedSub) {
-        alert("Please select a subcategory");
-        return;
-      }
-      const priceVal = Number(document.getElementById("price").value);
-      if (!priceVal || priceVal <= 0) {
-        alert("Please enter a valid price");
-        return;
-      }
+/* ===================== STATE ===================== */
+let selectedCat = null;
+let selectedSub = null;
 
-      const city = cityEl.value;
-      const entry = data[city][selectedCat][selectedSub];
-      const [low, high] = entry.range;
+/* ===================== INIT ===================== */
+const cityEl = document.getElementById("city");
+Object.keys(data).forEach(c => {
+  cityEl.innerHTML += `<option value="${c}">${c}</option>`;
+});
 
-      let verdict = "", cls = "", pct = 0;
-      if (priceVal < low * 0.85) {
-        verdict = "Very Cheap ✓";
-        cls = "good";
-        pct = Math.max(5, Math.round((priceVal / low) * 40));
-      } else if (priceVal <= low) {
-        verdict = "Below Average ✓";
-        cls = "good";
-        pct = Math.round(40 + ((priceVal - low * 0.85) / (low - low * 0.85)) * 10);
-      } else if (priceVal <= high) {
-        verdict = "Fair Price ✓";
-        cls = "warn";
-        pct = Math.round(50 + ((priceVal - low) / (high - low)) * 30);
-      } else if (priceVal <= high * 1.2) {
-        verdict = "A Bit Pricey ⚠";
-        cls = "warn";
-        pct = Math.round(80 + ((priceVal - high) / (high * 0.2)) * 10);
-      } else {
-        verdict = "Overpriced ✗";
-        cls = "bad";
-        pct = 100;
-      }
+loadCategories();
 
-      const barColors = {
-        good: "#34d399",
-        warn: "#fbbf24",
-        bad: "#f87171"
-      };
+/* ===================== LOADERS ===================== */
+function loadCategories(){
+  selectedCat = null;
+  selectedSub = null;
+  const city = cityEl.value;
+  const cats = Object.keys(data[city]);
+  const grid = document.getElementById("cat-grid");
+  grid.innerHTML = "";
+  cats.forEach(cat => {
+    const pill = document.createElement("div");
+    pill.className = "cat-pill";
+    pill.textContent = cat;
+    pill.onclick = () => selectCat(cat, pill);
+    grid.appendChild(pill);
+  });
+  document.getElementById("sub-grid").innerHTML = "<span style='color:#475569;font-size:13px'>Select a category first</span>";
+  document.getElementById("result-card").style.display = "none";
+  document.getElementById("shops-card").style.display = "none";
+}
 
-      document.getElementById("result-card").style.display = "block";
-      document.getElementById("verdict").className = `verdict ${cls}`;
-      document.getElementById("verdict").textContent = verdict;
-      document.getElementById("range-label").textContent = `Expected fair range: PKR ${low.toLocaleString()} – ${high.toLocaleString()}`;
+function selectCat(cat, pill){
+  selectedCat = cat;
+  selectedSub = null;
+  document.querySelectorAll(".cat-pill").forEach(p => p.classList.remove("active"));
+  pill.classList.add("active");
+  loadSubs(cat);
+}
 
-      const fill = document.getElementById("bar-fill");
-      fill.style.width = "0%";
-      fill.style.background = barColors[cls];
-      setTimeout(() => {
-        fill.style.width = pct + "%";
-      }, 50);
+function loadSubs(cat){
+  const city = cityEl.value;
+  const subs = Object.keys(data[city][cat]);
+  const grid = document.getElementById("sub-grid");
+  grid.innerHTML = "";
+  subs.forEach(sub => {
+    const pill = document.createElement("div");
+    pill.className = "sub-pill";
+    pill.textContent = sub;
+    pill.onclick = () => selectSub(sub, pill);
+    grid.appendChild(pill);
+  });
+}
 
-      document.getElementById("bar-hint").textContent = 
-        pct < 50 ? "You're paying less than average — great deal!" :
-        pct < 75 ? "You're paying a fair market price." :
-        pct < 90 ? "Slightly above average — shop around." :
-        "You're overpaying — check alternatives below.";
+function selectSub(sub, pill){
+  selectedSub = sub;
+  document.querySelectorAll(".sub-pill").forEach(p => p.classList.remove("active"));
+  pill.classList.add("active");
+}
 
-      // Shops
-      document.getElementById("shops-card").style.display = "block";
-      const shops = entry.shops;
-      document.getElementById("shop-count").textContent = `${shops.length} options found`;
-      const container = document.getElementById("providers");
-      container.innerHTML = "";
-      shops.forEach((name, i) => {
-        const seed = (name.length * 7 + i * 13) % 40;
-        const score = 62 + seed;
-        let label = "Average", badge = "warn";
-        if (score >= 85) {
-          label = "Top Rated";
-          badge = "good";
-        } else if (score >= 75) {
-          label = "Trusted";
-          badge = "good";
-        } else if (score < 65) {
-          label = "Unverified";
-          badge = "bad";
-        }
-        container.innerHTML += `
-          <div class="shop-card">
-            <div>
-              <div class="shop-name">${name}</div>
-              <div class="shop-meta">${selectedCat} • ${selectedSub}</div>
-            </div>
-            <div style="text-align: right;">
-              <div><span class="badge ${badge}">${label}</span></div>
-              <div class="score">${score}/100</div>
-            </div>
-          </div>
-        `;
-      });
-    }
-  </script>
+/* ===================== CHECK PRICE ===================== */
+function checkPrice(){
+  if(!selectedCat){ alert("Please select a category"); return; }
+  if(!selectedSub){ alert("Please select a subcategory"); return; }
+  const priceVal = Number(document.getElementById("price").value);
+  if(!priceVal || priceVal <= 0){ alert("Please enter a valid price"); return; }
+
+  const city = cityEl.value;
+  const entry = data[city][selectedCat][selectedSub];
+  const [low, high] = entry.range;
+
+  let verdict = "", cls = "", pct = 0;
+  if(priceVal < low * 0.85){
+    verdict = "Very Cheap ✓"; cls = "good";
+    pct = Math.max(5, Math.round((priceVal / low) * 40));
+  } else if(priceVal <= low){
+    verdict = "Below Average ✓"; cls = "good";
+    pct = Math.round(40 + ((priceVal - low * 0.85)/(low - low*0.85))*10);
+  } else if(priceVal <= high){
+    verdict = "Fair Price ✓"; cls = "warn";
+    pct = Math.round(50 + ((priceVal - low)/(high - low))*30);
+  } else if(priceVal <= high * 1.2){
+    verdict = "A Bit Pricey ⚠"; cls = "warn";
+    pct = Math.round(80 + ((priceVal - high)/(high*0.2))*10);
+  } else {
+    verdict = "Overpriced ✗"; cls = "bad";
+    pct = 100;
+  }
+
+  const barColors = { good:"#34d399", warn:"#fbbf24", bad:"#f87171" };
+
+  document.getElementById("result-card").style.display = "block";
+  document.getElementById("verdict").className = `verdict ${cls}`;
+  document.getElementById("verdict").textContent = verdict;
+  document.getElementById("range-label").textContent = `Expected fair range: PKR ${low.toLocaleString()} – ${high.toLocaleString()}`;
+  const fill = document.getElementById("bar-fill");
+  fill.style.width = "0%";
+  fill.style.background = barColors[cls];
+  setTimeout(()=>{ fill.style.width = pct + "%"; }, 50);
+  document.getElementById("bar-hint").textContent =
+    pct < 50 ? "You're paying less than average — great deal!" :
+    pct < 75 ? "You're paying a fair market price." :
+    pct < 90 ? "Slightly above average — shop around." :
+    "You're overpaying — check alternatives below.";
+
+  // Shops
+  document.getElementById("shops-card").style.display = "block";
+  const shops = entry.shops;
+  document.getElementById("shop-count").textContent = `${shops.length} options found`;
+  const container = document.getElementById("providers");
+  container.innerHTML = "";
+
+  shops.forEach((name, i) => {
+    const seed = (name.length * 7 + i * 13) % 40;
+    const score = 62 + seed;
+    let label = "Average", badge = "warn";
+    if(score >= 85){ label = "Top Rated"; badge = "good"; }
+    else if(score >= 75){ label = "Trusted"; badge = "good"; }
+    else if(score < 65){ label = "Unverified"; badge = "bad"; }
+
+    container.innerHTML += `
+      <div class="shop-card">
+        <div>
+          <div class="shop-name">${name}</div>
+          <div class="shop-meta">${selectedCat} &bull; ${selectedSub}</div>
+        </div>
+        <div style="text-align:right">
+          <div><span class="badge ${badge}">${label}</span></div>
+          <div class="score">${score}/100</div>
+        </div>
+      </div>`;
+  });
+}
+
+</script>
+
 </body>
 </html>
