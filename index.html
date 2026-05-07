@@ -1,358 +1,243 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SahiPrice</title>
-
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:system-ui,-apple-system,sans-serif;
-      background:#080e1c;
-      color:#e2e8f0;
-      min-height:100vh;
-    }
-    .container{
-      max-width:960px;
-      margin:auto;
-      padding:28px 20px;
-    }
-    h1{
-      text-align:center;
-      font-size:2rem;
-      margin-bottom:6px;
-      letter-spacing:-0.5px;
-    }
-    .subtitle{
-      text-align:center;
-      color:#64748b;
-      font-size:14px;
-      margin-bottom:28px;
-    }
-    .card{
-      background:#111827;
-      padding:24px;
-      border-radius:16px;
-      margin-bottom:16px;
-      border:1px solid #1e293b;
-    }
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .field{display:flex;flex-direction:column;gap:6px}
-    label{
-      font-size:12px;
-      font-weight:600;
-      color:#94a3b8;
-      text-transform:uppercase;
-      letter-spacing:0.5px;
-    }
-    select,input{
-      padding:11px 14px;
-      border-radius:10px;
-      border:1px solid #1e293b;
-      background:#0f172a;
-      color:#e2e8f0;
-      font-size:14px;
-      outline:none;
-      transition:border-color .2s;
-    }
-    select:focus,input:focus{border-color:#38bdf8}
-    .btn{
-      width:100%;
-      margin-top:8px;
-      padding:14px;
-      border:none;
-      border-radius:12px;
-      background:linear-gradient(135deg,#38bdf8,#818cf8);
-      color:#fff;
-      font-weight:700;
-      font-size:15px;
-      cursor:pointer;
-      transition:opacity .2s,transform .1s;
-    }
-    .btn:hover{opacity:.9}
-    .btn:active{transform:scale(.98)}
-
-    .result-box{text-align:center;padding:8px 0}
-    .verdict{font-size:2rem;font-weight:800;letter-spacing:-1px}
-    .range-label{margin-top:6px;font-size:13px;color:#64748b}
-    .price-bar{height:8px;border-radius:99px;background:#1e293b;margin:14px 0 6px;overflow:hidden}
-    .price-bar-fill{height:100%;border-radius:99px;transition:width .6s ease}
-
-    .good{color:#34d399}
-    .warn{color:#fbbf24}
-    .bad{color:#f87171}
-
-    .cat-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
-    .cat-pill{
-      padding:7px 14px;
-      border-radius:99px;
-      border:1px solid #1e293b;
-      background:#0f172a;
-      color:#94a3b8;
-      font-size:13px;
-      cursor:pointer;
-    }
-    .cat-pill.active{background:#1e3a5f;border-color:#38bdf8;color:#38bdf8;font-weight:600}
-
-    .sub-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
-    .sub-pill{
-      padding:6px 13px;
-      border-radius:99px;
-      border:1px solid #1e293b;
-      background:#0f172a;
-      color:#94a3b8;
-      font-size:12px;
-      cursor:pointer;
-    }
-    .sub-pill.active{background:#1e1b4b;border-color:#818cf8;color:#818cf8;font-weight:600}
-
-    .shop-card{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      background:#0f172a;
-      border:1px solid #1e293b;
-      border-radius:12px;
-      padding:14px 16px;
-      margin-bottom:10px;
-    }
-    .shop-name{font-weight:600;font-size:14px}
-    .shop-meta{font-size:12px;color:#64748b}
-    .badge{padding:4px 10px;border-radius:99px;font-size:11px;font-weight:600}
-    .badge.good{background:rgba(52,211,153,.15);color:#34d399}
-    .badge.warn{background:rgba(251,191,36,.15);color:#fbbf24}
-    .badge.bad{background:rgba(248,113,113,.15);color:#f87171}
-    .score{font-size:11px;color:#64748b;text-align:right;margin-top:3px}
-
-    @media(max-width:580px){
-      .grid2{grid-template-columns:1fr}
-      h1{font-size:1.5rem}
-    }
-  </style>
-</head>
-
-<body>
-
-<div class="container">
-
-  <h1>💸 SahiPrice</h1>
-  <p class="subtitle">Check if you're paying a fair price in Pakistan</p>
-
-  <div class="card">
-
-    <div class="grid2">
-      <div class="field">
-        <label>City</label>
-        <select id="city" onchange="loadCategories()"></select>
-      </div>
-
-      <div class="field">
-        <label>Enter Price (PKR)</label>
-        <input type="number" id="price" placeholder="e.g. 2500">
-      </div>
-    </div>
-
-    <label style="margin-top:18px;display:block">Category</label>
-    <div class="cat-grid" id="cat-grid"></div>
-
-    <label>Subcategory</label>
-    <div class="sub-grid" id="sub-grid"></div>
-
-    <button class="btn" onclick="checkPrice()">✦ Check Price</button>
-
-  </div>
-
-  <div class="card" id="result-card" style="display:none">
-    <div class="result-box">
-      <div class="verdict" id="verdict"></div>
-      <div class="range-label" id="range-label"></div>
-      <div class="price-bar"><div class="price-bar-fill" id="bar-fill"></div></div>
-      <small id="bar-hint"></small>
-    </div>
-  </div>
-
-  <div class="card" id="shops-card" style="display:none">
-    <div class="shops-header">
-      <h3>Suggested Shops / Services</h3>
-      <span class="shop-count" id="shop-count"></span>
-    </div>
-    <div id="providers"></div>
-  </div>
-
-</div>
-
-<script>
-
 const data = {
-  Rawalpindi: {
-    "🥩 Meat & Poultry": {
-      "Chicken (per kg)": { range: [700, 1000], shops: ["Meat 2 Meat Rawalpindi","Pakeeza Meat","Al-Baraka Poultry","Saddar Chicken House","Raja Broast & Meat"] },
-      "Beef (per kg)": { range: [1500, 2500], shops: ["Meat 2 Meat Rawalpindi","Al Madina Meat","Faisal Meat Shop","Liaquat Bazar Butcher","Cantt Meat Center"] },
-      "Mutton (per kg)": { range: [2500, 4000], shops: ["Pakeeza Meat","Al Madina Meat","Bahadur Khan Meat","Saddar Mutton House","City Meat Market"] },
-      "Mince (per kg)": { range: [900, 1400], shops: ["Meat 2 Meat Rawalpindi","Pakeeza Meat","Al Madina Meat"] },
-      "Sausages / Kabab": { range: [300, 700], shops: ["Al-Shams Deli","Pakeeza Meat","Meat 2 Meat Rawalpindi"] }
+  Rawalpindi:{
+    "🥩 Meat & Poultry":{
+      "Chicken (per kg)":{
+        range:[700,1000],
+        shops:["Meat 2 Meat Rawalpindi","Pakeeza Meat","Al-Baraka Poultry","Saddar Chicken House","Raja Broast & Meat"]
+      },
+      "Beef (per kg)":{
+        range:[1500,2500],
+        shops:["Meat 2 Meat Rawalpindi","Al Madina Meat","Faisal Meat Shop","Liaquat Bazar Butcher","Cantt Meat Center"]
+      },
+      "Mutton (per kg)":{
+        range:[2500,4000],
+        shops:["Pakeeza Meat","Al Madina Meat","Bahadur Khan Meat","Saddar Mutton House","City Meat Market"]
+      },
+      "Mince (per kg)":{
+        range:[900,1400],
+        shops:["Meat 2 Meat Rawalpindi","Pakeeza Meat","Al Madina Meat"]
+      },
+      "Sausages / Kabab":{
+        range:[300,700],
+        shops:["Al-Shams Deli","Pakeeza Meat","Meat 2 Meat Rawalpindi"]
+      }
     },
 
-    "🥦 Vegetables & Fruit": {
-      "Tomatoes (per kg)": { range: [60, 160], shops: ["Raja Bazaar Sabzi Mandi","Liaquat Bazar Veggie","Green Fresh Market","City Sabzi Market"] },
-      "Potatoes (per kg)": { range: [50, 120], shops: ["Raja Bazaar Sabzi Mandi","Liaquat Bazar Veggie","Fresh Produce Saddar"] },
-      "Onions (per kg)": { range: [60, 140], shops: ["Raja Bazaar Sabzi Mandi","Green Fresh Market","Cantt Vegetable Stall"] },
-      "Apples (per kg)": { range: [200, 450], shops: ["Fruit Wala Saddar","Cantt Fruit Stand","Fresh Bazar RWP"] },
-      "Bananas (per dozen)": { range: [80, 160], shops: ["Fruit Wala Saddar","Liaquat Bazar Fruit","Green Fresh Market"] }
+    "🥦 Vegetables & Fruit":{
+      "Tomatoes (per kg)":{
+        range:[60,160],
+        shops:["Raja Bazaar Sabzi Mandi","Liaquat Bazar Veggie","Green Fresh Market","City Sabzi Market"]
+      },
+      "Potatoes (per kg)":{
+        range:[50,120],
+        shops:["Raja Bazaar Sabzi Mandi","Liaquat Bazar Veggie","Fresh Produce Saddar"]
+      },
+      "Onions (per kg)":{
+        range:[60,140],
+        shops:["Raja Bazaar Sabzi Mandi","Green Fresh Market","Cantt Vegetable Stall"]
+      },
+      "Apples (per kg)":{
+        range:[200,450],
+        shops:["Fruit Wala Saddar","Cantt Fruit Stand","Fresh Bazar RWP"]
+      },
+      "Bananas (per dozen)":{
+        range:[80,160],
+        shops:["Fruit Wala Saddar","Liaquat Bazar Fruit","Green Fresh Market"]
+      }
     },
 
-    "❄️ AC Services": {
-      "AC Repair": { range: [1500, 5000], shops: ["Cool Care Services","Pak AC Experts","Shaheen Cooling","Cantt AC Workshop","City Cool RWP"] },
-      "AC Installation": { range: [2500, 6000], shops: ["Cool Care Services","City Cooling RWP","Pak AC Experts","National AC Services"] },
-      "AC Gas Refill": { range: [2000, 4500], shops: ["Cool Care Services","Shaheen Cooling","AC Solutions RWP","Pak AC Experts"] },
-      "AC Servicing": { range: [1000, 2500], shops: ["Pak AC Experts","City Cool RWP","Cool Care Services","National AC Services"] }
+    "❄️ AC Services":{
+      "AC Repair":{
+        range:[1500,5000],
+        shops:["Cool Care Services","Pak AC Experts","Shaheen Cooling","Cantt AC Workshop","City Cool RWP"]
+      },
+      "AC Installation":{
+        range:[2500,6000],
+        shops:["Cool Care Services","City Cooling RWP","Pak AC Experts","National AC Services"]
+      },
+      "AC Gas Refill":{
+        range:[2000,4500],
+        shops:["Cool Care Services","Shaheen Cooling","AC Solutions RWP","Pak AC Experts"]
+      },
+      "AC Servicing":{
+        range:[1000,2500],
+        shops:["Pak AC Experts","City Cool RWP","Cool Care Services","National AC Services"]
+      }
     },
 
-    "🛵 Mobile Repair": {
-      "Screen Replacement": { range: [2000, 12000], shops: ["iTech Saddar","Mobile Zone RWP","Cantt Phone Repair","Digital Fix Center","iFix Rawalpindi"] },
-      "Battery Replacement": { range: [500, 2500], shops: ["Mobile Zone RWP","iTech Saddar","Phone Doctor RWP"] },
-      "Charging Port Fix": { range: [500, 2000], shops: ["iTech Saddar","Digital Fix Center","Mobile Zone RWP"] },
-      "Software/Flash": { range: [500, 1500], shops: ["Cantt Phone Repair","Mobile Zone RWP","iTech Saddar"] }
+    "🛵 Mobile Repair":{
+      "Screen Replacement":{
+        range:[2000,12000],
+        shops:["iTech Saddar","Mobile Zone RWP","Cantt Phone Repair","Digital Fix Center","iFix Rawalpindi"]
+      },
+      "Battery Replacement":{
+        range:[500,2500],
+        shops:["Mobile Zone RWP","iTech Saddar","Phone Doctor RWP"]
+      },
+      "Charging Port Fix":{
+        range:[500,2000],
+        shops:["iTech Saddar","Digital Fix Center","Mobile Zone RWP"]
+      },
+      "Software/Flash":{
+        range:[500,1500],
+        shops:["Cantt Phone Repair","Mobile Zone RWP","iTech Saddar"]
+      }
     },
 
-    "🍽️ Food & Restaurants": {
-      "Biryani (plate)": { range: [250, 700], shops: ["Student Biryani RWP","Al-Shams Restaurant","Karachi Darbar RWP","Usmania Restaurant","Food Street Rawalpindi"] },
-      "Burger": { range: [200, 800], shops: ["Lahori Burger RWP","Peri Peri RWP","Burger Lab RWP","The Burger Spot","Bun Kebab Corner"] },
-      "Pizza (medium)": { range: [600, 2000], shops: ["Pizza Hut Rawalpindi","Domino's RWP","Pizza Point","2 Bros Pizza RWP"] },
-      "Desi Breakfast": { range: [150, 500], shops: ["Pindi Paye House","Al-Mustafa Nashta","Saddar Nashta Corner","Cantt Breakfast Dhaba"] },
-      "Chai (cup)": { range: [30, 100], shops: ["Pindi Dhaba","Saddar Tea House","Irani Chai Rawalpindi"] }
+    "🍽️ Food & Restaurants":{
+      "Biryani (plate)":{
+        range:[250,700],
+        shops:["Student Biryani RWP","Al-Shams Restaurant","Karachi Darbar RWP","Usmania Restaurant","Food Street Rawalpindi"]
+      },
+      "Burger":{
+        range:[200,800],
+        shops:["Lahori Burger RWP","Peri Peri RWP","Burger Lab RWP","The Burger Spot","Bun Kebab Corner"]
+      },
+      "Pizza (medium)":{
+        range:[600,2000],
+        shops:["Pizza Hut Rawalpindi","Domino's RWP","Pizza Point","2 Bros Pizza RWP"]
+      },
+      "Desi Breakfast":{
+        range:[150,500],
+        shops:["Pindi Paye House","Al-Mustafa Nashta","Saddar Nashta Corner","Cantt Breakfast Dhaba"]
+      },
+      "Chai (cup)":{
+        range:[30,100],
+        shops:["Pindi Dhaba","Saddar Tea House","Irani Chai Rawalpindi"]
+      }
+    },
+
+    "🏠 Home Services":{
+      "Plumber (per visit)":{
+        range:[500,2000],
+        shops:["Pindi Plumber Pro","Home Fix RWP","City Plumbers","Hasan Plumbing Services"]
+      },
+      "Electrician (per visit)":{
+        range:[500,2500],
+        shops:["Pak Electric Services","City Electricians RWP","Home Tech Services","Power Fix RWP"]
+      },
+      "House Cleaning (per session)":{
+        range:[2000,6000],
+        shops:["CleanPro RWP","Sapphire Cleaning","Home Fresh Services","City Clean"]
+      },
+      "Painter (per day)":{
+        range:[1500,4000],
+        shops:["Color Master RWP","Pindi Paint Works","Wall Art Services","City Painters"]
+      }
+    },
+
+    "👗 Clothes & Tailoring":{
+      "Shirt Stitching":{
+        range:[400,1500],
+        shops:["Saddar Darzi","Master Tailor RWP","Fashion Stitch RWP","Classic Tailors"]
+      },
+      "Shalwar Kameez Stitching":{
+        range:[600,2500],
+        shops:["Pindi Tailors","Royal Stitch RWP","Classic Tailors","Cantt Darzi"]
+      },
+      "T-Shirt (ready-made)":{
+        range:[500,2000],
+        shops:["Al-Hamra Cloth","Saddar Garments","Star Clothing RWP","Bonanza RWP"]
+      },
+      "Jeans (ready-made)":{
+        range:[1500,5000],
+        shops:["Levis RWP","Saddar Denim","Al-Hamra Cloth","Style Park RWP"]
+      }
+    },
+
+    "🚗 Auto & Transport":{
+      "Car Wash":{
+        range:[300,1000],
+        shops:["Speed Wash RWP","Pindi Auto Wash","Crystal Car Care","Cantt Car Wash"]
+      },
+      "Oil Change (per litre)":{
+        range:[700,1500],
+        shops:["Total Parco RWP","PSO Station Saddar","Shell Rawalpindi","Auto Zone RWP"]
+      },
+      "Tyre Puncture Fix":{
+        range:[150,400],
+        shops:["Pindi Tyre Shop","City Tyre Works","Cantt Tyre Center","Road Fix RWP"]
+      },
+      "Uber/Careem (per km)":{
+        range:[25,50],
+        shops:["Uber","Careem","Bykea","inDriver"]
+      }
     }
   },
 
-  Lahore: {
-    "🥩 Meat & Poultry": {
-      "Chicken (per kg)": { range: [700, 1000], shops: ["Meat One Gulberg","Al-Fatah Meat Lahore","K&N's Lahore","Chaudhry Murgh Mahal","Defense Poultry"] }
+  Lahore:{
+    "🥩 Meat & Poultry":{
+      "Chicken (per kg)":{
+        range:[700,1000],
+        shops:["Meat One Gulberg","Al-Fatah Meat Lahore","K&N's Lahore","Chaudhry Murgh Mahal","Defense Poultry"]
+      },
+      "Beef (per kg)":{
+        range:[1500,2500],
+        shops:["Meat One Lahore","Metro Meat Lahore","Butt Butcher Anarkali","Liberty Meat Shop","Chaudhry Beef House"]
+      },
+      "Mutton (per kg)":{
+        range:[2500,4000],
+        shops:["Al-Fatah Meat","Meat One","Gourmet Butcher Lahore","Cantt Mutton House","Old City Butcher"]
+      }
+    },
+
+    "🥦 Vegetables & Fruit":{
+      "Tomatoes (per kg)":{
+        range:[60,160],
+        shops:["Lahore Mandi","Township Veggie Market","Liberty Sabzi Mandi","Model Town Fresh Market"]
+      },
+      "Potatoes (per kg)":{
+        range:[50,120],
+        shops:["Lahore Mandi","Metro Cash & Carry Lahore","Al-Fatah Hypermarket"]
+      },
+      "Onions (per kg)":{
+        range:[60,140],
+        shops:["Township Veggie Market","Lahore Mandi","Garden Town Sabzi"]
+      },
+      "Apples (per kg)":{
+        range:[200,450],
+        shops:["Liberty Fruit Market","Gulberg Fruit Wala","DHA Fruit Center"]
+      },
+      "Bananas (per dozen)":{
+        range:[80,160],
+        shops:["Liberty Fruit Market","Model Town Fruit","Iqbal Town Fruit Stand"]
+      }
     }
   },
 
-  Karachi: {
-    "🥩 Meat & Poultry": {
-      "Chicken (per kg)": { range: [700, 1000], shops: ["K&N's Karachi","Meat One Karachi","Clifton Poultry","Al-Maidah Meat","Korangi Murgh House"] }
+  Karachi:{
+    "🥩 Meat & Poultry":{
+      "Chicken (per kg)":{
+        range:[700,1000],
+        shops:["K&N's Karachi","Meat One Karachi","Clifton Poultry","Al-Maidah Meat","Korangi Murgh House"]
+      },
+      "Beef (per kg)":{
+        range:[1500,2500],
+        shops:["K&N's Karachi","Metro Meat Karachi","Kharadar Butcher","Bohri Bazaar Meat","Defense Beef House"]
+      }
+    },
+
+    "🍽️ Food & Restaurants":{
+      "Biryani (plate)":{
+        range:[250,700],
+        shops:["Student Biryani Karachi","Bundu Khan KHI","Usmania Restaurant KHI","Burns Road Biryani","Kolachi Restaurant"]
+      }
     }
   },
 
-  Islamabad: {
-    "🥩 Meat & Poultry": {
-      "Chicken (per kg)": { range: [700, 1000], shops: ["Meat One F-10","Al-Fatah ISB","Islamabad Murgh Mahal","G-11 Poultry","Super Market Meat"] }
+  Islamabad:{
+    "🥩 Meat & Poultry":{
+      "Chicken (per kg)":{
+        range:[700,1000],
+        shops:["Meat One F-10","Al-Fatah ISB","Islamabad Murgh Mahal","G-11 Poultry","Super Market Meat"]
+      }
+    },
+
+    "🍽️ Food & Restaurants":{
+      "Biryani (plate)":{
+        range:[250,700],
+        shops:["Student Biryani ISB","Monal Restaurant","Islamabad Club","Desi Dhaba F-7","Al-Shams ISB"]
+      }
     }
   }
 };
-let selectedCat = null;
-let selectedSub = null;
-
-const cityEl = document.getElementById("city");
-
-Object.keys(data).forEach(c => {
-  cityEl.innerHTML += `<option value="${c}">${c}</option>`;
-});
-
-loadCategories();
-
-function loadCategories(){
-  selectedCat = null;
-  selectedSub = null;
-
-  const city = cityEl.value;
-  const cats = Object.keys(data[city]);
-
-  const grid = document.getElementById("cat-grid");
-  grid.innerHTML = "";
-
-  cats.forEach(cat => {
-    const pill = document.createElement("div");
-    pill.className = "cat-pill";
-    pill.textContent = cat;
-    pill.onclick = () => selectCat(cat, pill);
-    grid.appendChild(pill);
-  });
-
-  document.getElementById("sub-grid").innerHTML = "Select a category first";
-}
-
-function selectCat(cat,pill){
-  selectedCat = cat;
-  document.querySelectorAll(".cat-pill").forEach(p=>p.classList.remove("active"));
-  pill.classList.add("active");
-  loadSubs(cat);
-}
-
-function loadSubs(cat){
-  const city = cityEl.value;
-  const subs = Object.keys(data[city][cat]);
-
-  const grid = document.getElementById("sub-grid");
-  grid.innerHTML = "";
-
-  subs.forEach(sub=>{
-    const pill=document.createElement("div");
-    pill.className="sub-pill";
-    pill.textContent=sub;
-    pill.onclick=()=>selectSub(sub,pill);
-    grid.appendChild(pill);
-  });
-}
-
-function selectSub(sub,pill){
-  selectedSub=sub;
-  document.querySelectorAll(".sub-pill").forEach(p=>p.classList.remove("active"));
-  pill.classList.add("active");
-}
-
-function checkPrice(){
-
-  const priceVal = Number(document.getElementById("price").value);
-
-  const city = cityEl.value;
-  const entry = data[city][selectedCat][selectedSub];
-
-  const [low,high] = entry.range;
-
-  let verdict="",cls="",pct=0;
-
-  if(priceVal < low){
-    verdict="Good Deal";
-    cls="good";
-  } else if(priceVal <= high){
-    verdict="Fair Price";
-    cls="warn";
-  } else {
-    verdict="Overpriced";
-    cls="bad";
-  }
-
-  document.getElementById("result-card").style.display="block";
-  document.getElementById("verdict").className=`verdict ${cls}`;
-  document.getElementById("verdict").textContent=verdict;
-
-  document.getElementById("range-label").textContent=
-    `PKR ${low} - ${high}`;
-
-  document.getElementById("shop-count").textContent=
-    `${entry.shops.length} options`;
-
-  const container=document.getElementById("providers");
-  container.innerHTML="";
-
-  entry.shops.forEach((s,i)=>{
-    container.innerHTML += `
-      <div class="shop-card">
-        <div>
-          <div class="shop-name">${s}</div>
-          <div class="shop-meta">${selectedCat}</div>
-        </div>
-      </div>
-    `;
-  });
-
-}
-
-</script>
-
-</body>
-</html>
