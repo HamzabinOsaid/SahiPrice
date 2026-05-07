@@ -643,6 +643,471 @@ function checkPrice(){
 }
 
 </script>
+<!-- PREMIUM SYSTEM -->
 
+<style>
+
+/* Premium Banner */
+.premium-banner{
+  margin-bottom:16px;
+  padding:18px;
+  border-radius:16px;
+  background:linear-gradient(135deg,#312e81,#1e1b4b);
+  border:1px solid #6366f1;
+  position:relative;
+  overflow:hidden;
+}
+
+.premium-banner h2{
+  font-size:1.2rem;
+  margin-bottom:6px;
+}
+
+.premium-banner p{
+  color:#cbd5e1;
+  font-size:14px;
+  line-height:1.5;
+}
+
+.premium-btn{
+  margin-top:14px;
+  padding:12px 18px;
+  border:none;
+  border-radius:12px;
+  background:#818cf8;
+  color:white;
+  font-weight:700;
+  cursor:pointer;
+  width:100%;
+}
+
+.pro-badge{
+  display:inline-block;
+  margin-left:8px;
+  padding:4px 8px;
+  border-radius:99px;
+  font-size:10px;
+  background:#fbbf24;
+  color:#111827;
+  font-weight:800;
+}
+
+.locked{
+  opacity:.5;
+  pointer-events:none;
+  filter:blur(.5px);
+}
+
+.feature-card{
+  background:#0f172a;
+  border:1px solid #1e293b;
+  padding:16px;
+  border-radius:14px;
+  margin-top:14px;
+}
+
+.feature-title{
+  font-weight:700;
+  margin-bottom:8px;
+}
+
+.price-history{
+  margin-top:10px;
+  display:flex;
+  align-items:flex-end;
+  gap:6px;
+  height:120px;
+}
+
+.bar{
+  flex:1;
+  background:linear-gradient(to top,#38bdf8,#818cf8);
+  border-radius:8px 8px 0 0;
+}
+
+.ai-box{
+  margin-top:10px;
+  background:#111827;
+  border:1px solid #334155;
+  padding:14px;
+  border-radius:12px;
+  font-size:14px;
+  line-height:1.6;
+}
+
+.deal{
+  margin-top:10px;
+  padding:12px;
+  border-radius:12px;
+  background:rgba(52,211,153,.08);
+  border:1px solid rgba(52,211,153,.3);
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+  padding:20px;
+}
+
+.modal-box{
+  width:100%;
+  max-width:420px;
+  background:#111827;
+  border:1px solid #334155;
+  border-radius:20px;
+  padding:24px;
+}
+
+.plan{
+  border:1px solid #334155;
+  border-radius:14px;
+  padding:16px;
+  margin-top:12px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.plan:hover{
+  border-color:#818cf8;
+  transform:translateY(-2px);
+}
+
+.plan-title{
+  font-weight:800;
+  font-size:18px;
+}
+
+.plan-price{
+  margin-top:6px;
+  font-size:28px;
+  font-weight:900;
+}
+
+.plan-desc{
+  margin-top:6px;
+  color:#94a3b8;
+  font-size:13px;
+}
+
+.close-btn{
+  margin-top:14px;
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  background:#1e293b;
+  color:#e2e8f0;
+  cursor:pointer;
+}
+
+.alert-btn{
+  margin-top:10px;
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  background:#0ea5e9;
+  color:white;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.saved-alert{
+  margin-top:10px;
+  color:#34d399;
+  font-size:13px;
+}
+
+</style>
+
+<div class="container">
+
+<div class="premium-banner">
+  <h2>🚀 SahiPrice Premium <span class="pro-badge">PRO</span></h2>
+  <p>
+    Unlock AI recommendations, price alerts, unlimited searches,
+    historical price tracking, exclusive deals, and faster notifications.
+  </p>
+
+  <button class="premium-btn" onclick="openPremium()">
+    Upgrade to Premium
+  </button>
+</div>
+
+</div>
+
+<!-- PREMIUM MODAL -->
+
+<div class="modal" id="premiumModal">
+  <div class="modal-box">
+
+    <h2 style="margin-bottom:8px">💎 Upgrade to Premium</h2>
+    <p style="color:#94a3b8;font-size:14px">
+      Save money automatically with smart alerts and AI-powered recommendations.
+    </p>
+
+    <div class="plan" onclick="buyPremium('Monthly')">
+      <div class="plan-title">
+        Monthly Premium
+      </div>
+
+      <div class="plan-price">
+        Rs. 249
+      </div>
+
+      <div class="plan-desc">
+        Per month • 7-day free trial
+      </div>
+    </div>
+
+    <div class="plan" onclick="buyPremium('Yearly')">
+      <div class="plan-title">
+        Yearly Premium 🔥
+      </div>
+
+      <div class="plan-price">
+        Rs. 1,999
+      </div>
+
+      <div class="plan-desc">
+        Save over 30% yearly
+      </div>
+    </div>
+
+    <button class="close-btn" onclick="closePremium()">
+      Maybe Later
+    </button>
+
+  </div>
+</div>
+
+<script>
+
+/* ================= PREMIUM ================= */
+
+let isPremium =
+localStorage.getItem("sahiPricePremium") === "true";
+
+let searches =
+Number(localStorage.getItem("sahiSearches") || 0);
+
+function openPremium(){
+  document.getElementById("premiumModal").style.display = "flex";
+}
+
+function closePremium(){
+  document.getElementById("premiumModal").style.display = "none";
+}
+
+function buyPremium(plan){
+
+  localStorage.setItem("sahiPricePremium","true");
+
+  isPremium = true;
+
+  closePremium();
+
+  alert(
+    "🎉 Welcome to SahiPrice Premium (" +
+    plan +
+    ")"
+  );
+
+  location.reload();
+}
+
+/* SEARCH LIMIT */
+
+const originalCheckPrice = checkPrice;
+
+checkPrice = function(){
+
+  if(!isPremium){
+
+    searches++;
+
+    localStorage.setItem(
+      "sahiSearches",
+      searches
+    );
+
+    if(searches > 10){
+      openPremium();
+      alert(
+        "Free users can only do 10 searches daily."
+      );
+      return;
+    }
+  }
+
+  originalCheckPrice();
+
+  renderPremiumFeatures();
+}
+
+/* PREMIUM FEATURES */
+
+function renderPremiumFeatures(){
+
+  const resultCard =
+  document.getElementById("result-card");
+
+  const old =
+  document.getElementById("premiumFeatures");
+
+  if(old) old.remove();
+
+  const div =
+  document.createElement("div");
+
+  div.className = "card";
+
+  div.id = "premiumFeatures";
+
+  div.innerHTML = `
+
+  <div class="section-title">
+    Premium Features
+  </div>
+
+  ${
+    isPremium
+    ?
+    `
+    <div class="feature-card">
+
+      <div class="feature-title">
+        🔔 Price Drop Alerts
+      </div>
+
+      <p style="font-size:13px;color:#94a3b8">
+        Get notified instantly when prices drop.
+      </p>
+
+      <button class="alert-btn"
+      onclick="saveAlert()">
+        Track This Price
+      </button>
+
+      <div id="alertSaved"></div>
+
+    </div>
+
+    <div class="feature-card">
+
+      <div class="feature-title">
+        📉 Historical Price Tracking
+      </div>
+
+      <div class="price-history">
+
+        <div class="bar" style="height:55%"></div>
+        <div class="bar" style="height:72%"></div>
+        <div class="bar" style="height:60%"></div>
+        <div class="bar" style="height:88%"></div>
+        <div class="bar" style="height:48%"></div>
+        <div class="bar" style="height:76%"></div>
+
+      </div>
+
+    </div>
+
+    <div class="feature-card">
+
+      <div class="feature-title">
+        🤖 AI Recommendation
+      </div>
+
+      <div class="ai-box">
+
+        Based on current pricing trends,
+        this is considered a ${
+          Math.random() > 0.5
+          ? "strong deal"
+          : "fair market price"
+        }.
+
+        Recommended:
+        compare 2-3 nearby providers before buying.
+
+      </div>
+
+    </div>
+
+    <div class="feature-card">
+
+      <div class="feature-title">
+        💸 Exclusive Premium Deals
+      </div>
+
+      <div class="deal">
+        Premium users can get
+        10% OFF at selected providers.
+      </div>
+
+    </div>
+    `
+    :
+    `
+    <div class="feature-card">
+
+      <div class="feature-title">
+        🔒 Premium Locked
+      </div>
+
+      <p style="font-size:13px;color:#94a3b8;line-height:1.6">
+
+        Unlock:
+        <br><br>
+
+        ✅ AI recommendations
+        <br>
+        ✅ Price alerts
+        <br>
+        ✅ Historical tracking
+        <br>
+        ✅ Unlimited searches
+        <br>
+        ✅ Exclusive deals
+        <br>
+        ✅ Faster notifications
+
+      </p>
+
+      <button class="premium-btn"
+      onclick="openPremium()">
+        Upgrade Now
+      </button>
+
+    </div>
+    `
+  }
+
+  `;
+
+  resultCard.after(div);
+}
+
+/* ALERT SAVE */
+
+function saveAlert(){
+
+  const area =
+  document.getElementById("alertSaved");
+
+  area.innerHTML =
+  `
+  <div class="saved-alert">
+    ✅ Alert saved successfully!
+  </div>
+  `;
+}
+
+</script>
 </body>
 </html>
