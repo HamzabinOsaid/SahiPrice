@@ -184,13 +184,65 @@
 
 <script>
 
-const data = { /* 👈 YOUR FULL DATA KEPT EXACTLY AS-IS */
-  Rawalpindi: {},
-  Lahore: {},
-  Karachi: {},
-  Islamabad: {}
-};
+const data = {
+  Rawalpindi: {
+    "🥩 Meat & Poultry": {
+      "Chicken (per kg)": { range: [700, 1000], shops: ["Meat 2 Meat Rawalpindi","Pakeeza Meat","Al-Baraka Poultry","Saddar Chicken House","Raja Broast & Meat"] },
+      "Beef (per kg)": { range: [1500, 2500], shops: ["Meat 2 Meat Rawalpindi","Al Madina Meat","Faisal Meat Shop","Liaquat Bazar Butcher","Cantt Meat Center"] },
+      "Mutton (per kg)": { range: [2500, 4000], shops: ["Pakeeza Meat","Al Madina Meat","Bahadur Khan Meat","Saddar Mutton House","City Meat Market"] },
+      "Mince (per kg)": { range: [900, 1400], shops: ["Meat 2 Meat Rawalpindi","Pakeeza Meat","Al Madina Meat"] },
+      "Sausages / Kabab": { range: [300, 700], shops: ["Al-Shams Deli","Pakeeza Meat","Meat 2 Meat Rawalpindi"] }
+    },
 
+    "🥦 Vegetables & Fruit": {
+      "Tomatoes (per kg)": { range: [60, 160], shops: ["Raja Bazaar Sabzi Mandi","Liaquat Bazar Veggie","Green Fresh Market","City Sabzi Market"] },
+      "Potatoes (per kg)": { range: [50, 120], shops: ["Raja Bazaar Sabzi Mandi","Liaquat Bazar Veggie","Fresh Produce Saddar"] },
+      "Onions (per kg)": { range: [60, 140], shops: ["Raja Bazaar Sabzi Mandi","Green Fresh Market","Cantt Vegetable Stall"] },
+      "Apples (per kg)": { range: [200, 450], shops: ["Fruit Wala Saddar","Cantt Fruit Stand","Fresh Bazar RWP"] },
+      "Bananas (per dozen)": { range: [80, 160], shops: ["Fruit Wala Saddar","Liaquat Bazar Fruit","Green Fresh Market"] }
+    },
+
+    "❄️ AC Services": {
+      "AC Repair": { range: [1500, 5000], shops: ["Cool Care Services","Pak AC Experts","Shaheen Cooling","Cantt AC Workshop","City Cool RWP"] },
+      "AC Installation": { range: [2500, 6000], shops: ["Cool Care Services","City Cooling RWP","Pak AC Experts","National AC Services"] },
+      "AC Gas Refill": { range: [2000, 4500], shops: ["Cool Care Services","Shaheen Cooling","AC Solutions RWP","Pak AC Experts"] },
+      "AC Servicing": { range: [1000, 2500], shops: ["Pak AC Experts","City Cool RWP","Cool Care Services","National AC Services"] }
+    },
+
+    "🛵 Mobile Repair": {
+      "Screen Replacement": { range: [2000, 12000], shops: ["iTech Saddar","Mobile Zone RWP","Cantt Phone Repair","Digital Fix Center","iFix Rawalpindi"] },
+      "Battery Replacement": { range: [500, 2500], shops: ["Mobile Zone RWP","iTech Saddar","Phone Doctor RWP"] },
+      "Charging Port Fix": { range: [500, 2000], shops: ["iTech Saddar","Digital Fix Center","Mobile Zone RWP"] },
+      "Software/Flash": { range: [500, 1500], shops: ["Cantt Phone Repair","Mobile Zone RWP","iTech Saddar"] }
+    },
+
+    "🍽️ Food & Restaurants": {
+      "Biryani (plate)": { range: [250, 700], shops: ["Student Biryani RWP","Al-Shams Restaurant","Karachi Darbar RWP","Usmania Restaurant","Food Street Rawalpindi"] },
+      "Burger": { range: [200, 800], shops: ["Lahori Burger RWP","Peri Peri RWP","Burger Lab RWP","The Burger Spot","Bun Kebab Corner"] },
+      "Pizza (medium)": { range: [600, 2000], shops: ["Pizza Hut Rawalpindi","Domino's RWP","Pizza Point","2 Bros Pizza RWP"] },
+      "Desi Breakfast": { range: [150, 500], shops: ["Pindi Paye House","Al-Mustafa Nashta","Saddar Nashta Corner","Cantt Breakfast Dhaba"] },
+      "Chai (cup)": { range: [30, 100], shops: ["Pindi Dhaba","Saddar Tea House","Irani Chai Rawalpindi"] }
+    }
+  },
+
+  Lahore: {
+    "🥩 Meat & Poultry": {
+      "Chicken (per kg)": { range: [700, 1000], shops: ["Meat One Gulberg","Al-Fatah Meat Lahore","K&N's Lahore","Chaudhry Murgh Mahal","Defense Poultry"] }
+    }
+  },
+
+  Karachi: {
+    "🥩 Meat & Poultry": {
+      "Chicken (per kg)": { range: [700, 1000], shops: ["K&N's Karachi","Meat One Karachi","Clifton Poultry","Al-Maidah Meat","Korangi Murgh House"] }
+    }
+  },
+
+  Islamabad: {
+    "🥩 Meat & Poultry": {
+      "Chicken (per kg)": { range: [700, 1000], shops: ["Meat One F-10","Al-Fatah ISB","Islamabad Murgh Mahal","G-11 Poultry","Super Market Meat"] }
+    }
+  }
+};
 let selectedCat = null;
 let selectedSub = null;
 
